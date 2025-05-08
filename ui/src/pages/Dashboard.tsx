@@ -8,6 +8,15 @@ import { useJobStatistics } from '../hooks/useJobStatistics'
 import { useJobInstances } from '../hooks/useJobInstances'
 import { useJobExecutions } from '../hooks/useJobExecutions'
 import { DateTime } from '../components/DateTime'
+import { 
+  BarChart2, 
+  CheckCircle, 
+  XCircle, 
+  ArrowRight, 
+  Clock, 
+  ListOrdered, 
+  History 
+} from 'lucide-react'
 
 const Dashboard = () => {
   // Fetch job statistics
@@ -42,24 +51,38 @@ const Dashboard = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Statistics Card */}
-      <Card title="Job Statistics" className="md:col-span-2">
+      <Card title={
+        <div className="flex items-center">
+          <BarChart2 size={20} className="mr-2 text-primary-500" />
+          <span>Job Statistics</span>
+        </div>
+      } className="md:col-span-2">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700">
-            <h3 className="text-xl font-bold">Total Jobs</h3>
+            <h3 className="text-xl font-bold flex items-center">
+              <ListOrdered size={18} className="mr-2 text-primary-500" />
+              Total Jobs
+            </h3>
             <p className="text-3xl font-bold text-primary-600 dark:text-primary-400">
               {jobStatistics?.totalJobs || 0}
             </p>
           </div>
           
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700">
-            <h3 className="text-xl font-bold">Completed</h3>
+            <h3 className="text-xl font-bold flex items-center">
+              <CheckCircle size={18} className="mr-2 text-success-500" />
+              Completed
+            </h3>
             <p className="text-3xl font-bold text-success-600 dark:text-success-400">
               {jobStatistics?.jobsByStatus.COMPLETED || 0}
             </p>
           </div>
           
           <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700">
-            <h3 className="text-xl font-bold">Failed</h3>
+            <h3 className="text-xl font-bold flex items-center">
+              <XCircle size={18} className="mr-2 text-danger-500" />
+              Failed
+            </h3>
             <p className="text-3xl font-bold text-danger-600 dark:text-danger-400">
               {jobStatistics?.jobsByStatus.FAILED || 0}
             </p>
@@ -67,14 +90,20 @@ const Dashboard = () => {
         </div>
         
         <div className="mt-4">
-          <Link to="/statistics" className="btn-primary inline-block">
-            View Details
+          <Link to="/statistics" className="btn-primary inline-flex items-center">
+            <span>View Details</span>
+            <ArrowRight size={16} className="ml-2" />
           </Link>
         </div>
       </Card>
       
       {/* Recent Job Instances */}
-      <Card title="Recent Job Instances">
+      <Card title={
+        <div className="flex items-center">
+          <ListOrdered size={20} className="mr-2 text-primary-500" />
+          <span>Recent Job Instances</span>
+        </div>
+      }>
         {instancesError ? (
           <ErrorMessage error={instancesErrorData} />
         ) : (
@@ -111,8 +140,9 @@ const Dashboard = () => {
               </table>
             </div>
             <div className="mt-4">
-              <Link to="/job-instances" className="btn-outline inline-block">
-                View All Job Instances
+              <Link to="/job-instances" className="btn-outline inline-flex items-center">
+                <span>View All Job Instances</span>
+                <ArrowRight size={16} className="ml-2" />
               </Link>
             </div>
           </>
@@ -120,7 +150,12 @@ const Dashboard = () => {
       </Card>
       
       {/* Recent Job Executions */}
-      <Card title="Recent Job Executions">
+      <Card title={
+        <div className="flex items-center">
+          <History size={20} className="mr-2 text-primary-500" />
+          <span>Recent Job Executions</span>
+        </div>
+      }>
         {executionsError ? (
           <ErrorMessage error={executionsErrorData} />
         ) : (
@@ -159,8 +194,9 @@ const Dashboard = () => {
               </table>
             </div>
             <div className="mt-4">
-              <Link to="/job-executions" className="btn-outline inline-block">
-                View All Job Executions
+              <Link to="/job-executions" className="btn-outline inline-flex items-center">
+                <span>View All Job Executions</span>
+                <ArrowRight size={16} className="ml-2" />
               </Link>
             </div>
           </>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface PaginationProps {
   currentPage: number
@@ -49,9 +50,10 @@ export const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 0 || disabled}
-        className="pagination-button"
+        className="pagination-button flex items-center justify-center"
+        aria-label="Previous page"
       >
-        &laquo;
+        <ChevronLeft size={16} />
       </button>
       
       {/* Page numbers */}
@@ -79,9 +81,10 @@ export const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages - 1 || disabled}
-        className="pagination-button"
+        className="pagination-button flex items-center justify-center"
+        aria-label="Next page"
       >
-        &raquo;
+        <ChevronRight size={16} />
       </button>
     </div>
   )

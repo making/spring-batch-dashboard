@@ -1,5 +1,14 @@
 import React from 'react'
 import { JobStatus, StepStatus } from '../types/batch'
+import { 
+  CheckCircle, 
+  XCircle, 
+  AlertTriangle, 
+  Play, 
+  Pause, 
+  RotateCcw, 
+  HelpCircle 
+} from 'lucide-react'
 
 interface BadgeProps {
   status: JobStatus | StepStatus
@@ -7,31 +16,34 @@ interface BadgeProps {
 }
 
 export const StatusBadge: React.FC<BadgeProps> = ({ status, className = '' }) => {
-  // Map status to badge style
-  const getBadgeClass = (status: JobStatus | StepStatus): string => {
+  // Map status to badge style and icon
+  const getStatusInfo = (status: JobStatus | StepStatus): { badgeClass: string, icon: React.ReactNode } => {
     switch (status) {
       case 'COMPLETED':
-        return 'badge-success'
+        return { badgeClass: 'badge-success', icon: <CheckCircle size={14} /> }
       case 'FAILED':
-        return 'badge-danger'
+        return { badgeClass: 'badge-danger', icon: <XCircle size={14} /> }
       case 'ABANDONED':
-        return 'badge-danger'
+        return { badgeClass: 'badge-danger', icon: <XCircle size={14} /> }
       case 'STOPPED':
-        return 'badge-warning'
+        return { badgeClass: 'badge-warning', icon: <Pause size={14} /> }
       case 'STOPPING':
-        return 'badge-warning'
+        return { badgeClass: 'badge-warning', icon: <AlertTriangle size={14} /> }
       case 'STARTED':
-        return 'badge-info'
+        return { badgeClass: 'badge-info', icon: <Play size={14} /> }
       case 'STARTING':
-        return 'badge-info'
+        return { badgeClass: 'badge-info', icon: <RotateCcw size={14} /> }
       default:
-        return 'badge-secondary'
+        return { badgeClass: 'badge-secondary', icon: <HelpCircle size={14} /> }
     }
   }
 
+  const { badgeClass, icon } = getStatusInfo(status)
+
   return (
-    <span className={`${getBadgeClass(status)} ${className}`}>
-      {status}
+    <span className={`${badgeClass} ${className} flex items-center gap-1`}>
+      {icon}
+      <span>{status}</span>
     </span>
   )
 }
