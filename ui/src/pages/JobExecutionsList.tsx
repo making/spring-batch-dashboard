@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { LoadingSpinner } from '../components/LoadingSpinner'
@@ -8,6 +8,7 @@ import { StatusBadge } from '../components/StatusBadge'
 import { DateTime } from '../components/DateTime'
 import { useJobExecutions } from '../hooks/useJobExecutions'
 import { JobExecutionsParams, JobStatus } from '../types/batch'
+import { useSearchState } from "../context/SearchStateContext"
 
 const JOB_STATUSES: JobStatus[] = [
   'COMPLETED',
@@ -21,18 +22,16 @@ const JOB_STATUSES: JobStatus[] = [
 ]
 
 const JobExecutionsList = () => {
-  // State for filter and pagination
-  const [params, setParams] = useState<JobExecutionsParams>({
-    page: 0,
-    size: 20,
-    sort: 'startTime,desc'
-  })
+  const { searchState, setJobExecutionsState } = useSearchState();
   
-  // State for filter form
-  const [jobNameFilter, setJobNameFilter] = useState('')
-  const [statusFilter, setStatusFilter] = useState<JobStatus | ''>('')
-  const [startDateFrom, setStartDateFrom] = useState('')
-  const [startDateTo, setStartDateTo] = useState('')
+  // State for filter and pagination - initialize from saved state
+  const [params, setParams] = useState<JobExecutionsParams>(searchState.jobExecutions)
+  
+  // State for filter form - initialize from saved state
+  const [jobNameFilter, setJobNameFilter] = useState(searchState.jobExecutions.jobName || '')
+  const [statusFilter, setStatusFilter] = useState<JobStatus | ''>(searchState.jobExecutions.status || '')
+  const [startDateFrom, setStartDateFrom] = useState(searchState.jobExecutions.startDateFrom || '')
+  const [startDateTo, setStartDateTo] = useState(searchState.jobExecutions.startDateTo || '')
   
   // Fetch job executions with current params
   const {
@@ -41,6 +40,11 @@ const JobExecutionsList = () => {
     isError,
     error
   } = useJobExecutions(params)
+  
+  // Update context when params change
+  useEffect(() => {
+    setJobExecutionsState(params);
+  }, [params, setJobExecutionsState])
   
   // Handle page change
   const handlePageChange = (newPage: number) => {

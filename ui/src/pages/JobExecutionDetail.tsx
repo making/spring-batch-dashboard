@@ -1,5 +1,5 @@
 // No longer need useState since we don't have tabs anymore
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { ErrorMessage } from '../components/ErrorMessage'
@@ -7,6 +7,7 @@ import { StatusBadge } from '../components/StatusBadge'
 import { DateTime } from '../components/DateTime'
 import { useJobExecutionDetail } from '../hooks/useJobExecutionDetail'
 import { parseISO, differenceInSeconds } from 'date-fns'
+import { useSearchState } from "../context/SearchStateContext"
 
 const JobExecutionDetail = () => {
   // No need for tabs anymore as we only have parameters
@@ -14,6 +15,8 @@ const JobExecutionDetail = () => {
   // Get job execution ID from URL params
   const { jobExecutionId } = useParams<{ jobExecutionId: string }>()
   const id = jobExecutionId ? parseInt(jobExecutionId) : null
+  const navigate = useNavigate()
+  const { searchState } = useSearchState()
   
   // Fetch job execution detail
   const {
@@ -245,9 +248,12 @@ const JobExecutionDetail = () => {
       </Card>
       
       <div className="flex gap-4">
-        <Link to="/job-executions" className="btn-outline">
+        <button 
+          onClick={() => navigate('/job-executions')} 
+          className="btn-outline"
+        >
           Back to Job Executions
-        </Link>
+        </button>
         <Link to={`/job-instances/${jobExecutionDetail.jobInstanceId}`} className="btn-outline">
           View Job Instance
         </Link>

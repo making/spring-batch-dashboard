@@ -1,16 +1,19 @@
 import React from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Card } from "../components/Card";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import { ErrorMessage } from "../components/ErrorMessage";
 import { StatusBadge } from "../components/StatusBadge";
 import { DateTime } from "../components/DateTime";
 import { useJobInstanceDetail } from "../hooks/useJobInstanceDetail";
+import { useSearchState } from "../context/SearchStateContext";
 
 const JobInstanceDetail = () => {
   // Get job instance ID from URL params
   const { jobInstanceId } = useParams<{ jobInstanceId: string }>();
   const id = jobInstanceId ? parseInt(jobInstanceId) : null;
+  const navigate = useNavigate();
+  const { searchState } = useSearchState();
 
   // Fetch job instance detail
   const { jobInstanceDetail, isLoading, isError, error } = useJobInstanceDetail(id);
@@ -114,9 +117,12 @@ const JobInstanceDetail = () => {
       </Card>
 
       <div className="flex gap-4">
-        <Link to="/job-instances" className="btn-outline">
+        <button
+          onClick={() => navigate('/job-instances')}
+          className="btn-outline"
+        >
           Back to Job Instances
-        </Link>
+        </button>
       </div>
     </div>
   );

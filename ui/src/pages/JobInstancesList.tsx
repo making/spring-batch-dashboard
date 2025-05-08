@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "../components/Card";
 import { LoadingSpinner } from "../components/LoadingSpinner";
@@ -8,20 +8,24 @@ import { StatusBadge } from "../components/StatusBadge";
 import { DateTime } from "../components/DateTime";
 import { useJobInstances } from "../hooks/useJobInstances";
 import { JobInstancesParams } from "../types/batch";
+import { useSearchState } from "../context/SearchStateContext";
 
 const JobInstancesList = () => {
-  // State for filter and pagination
-  const [params, setParams] = useState<JobInstancesParams>({
-    page: 0,
-    size: 20,
-    sort: "jobInstanceId,desc",
-  });
+  const { searchState, setJobInstancesState } = useSearchState();
+  
+  // Initialize params from stored state or default values
+  const [params, setParams] = useState<JobInstancesParams>(searchState.jobInstances);
 
   // State for filter form
-  const [jobNameFilter, setJobNameFilter] = useState("");
+  const [jobNameFilter, setJobNameFilter] = useState(searchState.jobInstances.jobName || "");
 
   // Fetch job instances with current params
   const { jobInstances, isLoading, isError, error } = useJobInstances(params);
+
+  // Update context when params change
+  useEffect(() => {
+    setJobInstancesState(params);
+  }, [params, setJobInstancesState]);
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
@@ -101,16 +105,37 @@ const JobInstancesList = () => {
               {jobInstances?.content.map((instance) => (
                 <tr key={instance.jobInstanceId} className="table-row">
                   <td className="table-cell">
-                    <Link to={`/job-instances/${instance.jobInstanceId}`} className="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
+                    <Link 
+                      to={`/job-instances/${instance.jobInstanceId}`} 
+                      className="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300"
+                    >
                       {instance.jobInstanceId}
                     </Link>
                   </td>
                   <td className="table-cell">{instance.jobName}</td>
-                  <td className="table-cell">{instance.latestExecution ? <StatusBadge status={instance.latestExecution.status} /> : <span className="text-gray-500 dark:text-gray-400">-</span>}</td>
-                  <td className="table-cell">{instance.latestExecution?.startTime ? <DateTime date={instance.latestExecution.startTime} /> : <span className="text-gray-500 dark:text-gray-400">-</span>}</td>
-                  <td className="table-cell">{instance.latestExecution?.endTime ? <DateTime date={instance.latestExecution.endTime} /> : <span className="text-gray-500 dark:text-gray-400">-</span>}</td>
                   <td className="table-cell">
-                    <Link to={`/job-instances/${instance.jobInstanceId}`} className="btn btn-outline py-1 px-2 text-xs">
+                    {instance.latestExecution ? 
+                      <StatusBadge status={instance.latestExecution.status} /> : 
+                      <span className="text-gray-500 dark:text-gray-400">-</span>
+                    }
+                  </td>
+                  <td className="table-cell">
+                    {instance.latestExecution?.startTime ? 
+                      <DateTime date={instance.latestExecution.startTime} /> : 
+                      <span className="text-gray-500 dark:text-gray-400">-</span>
+                    }
+                  </td>
+                  <td className="table-cell">
+                    {instance.latestExecution?.endTime ? 
+                      <DateTime date={instance.latestExecution.endTime} /> : 
+                      <span className="text-gray-500 dark:text-gray-400">-</span>
+                    }
+                  </td>
+                  <td className="table-cell">
+                    <Link 
+                      to={`/job-instances/${instance.jobInstanceId}`} 
+                      className="btn btn-outline py-1 px-2 text-xs"
+                    >
                       Details
                     </Link>
                   </td>
@@ -132,7 +157,11 @@ const JobInstancesList = () => {
         {/* Pagination */}
         {jobInstances && (
           <div className="mt-4">
-            <Pagination currentPage={jobInstances.page} totalPages={jobInstances.totalPages} onPageChange={handlePageChange} />
+            <Pagination 
+              currentPage={jobInstances.page} 
+              totalPages={jobInstances.totalPages} 
+              onPageChange={handlePageChange} 
+            />
           </div>
         )}
       </Card>
