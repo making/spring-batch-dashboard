@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// No longer need useState since we don't have tabs anymore
 import { useParams, Link } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { LoadingSpinner } from '../components/LoadingSpinner'
@@ -9,8 +9,7 @@ import { useJobExecutionDetail } from '../hooks/useJobExecutionDetail'
 import { parseISO, differenceInSeconds } from 'date-fns'
 
 const JobExecutionDetail = () => {
-  // State for active tab
-  const [activeTab, setActiveTab] = useState<'parameters' | 'context'>('parameters')
+  // No need for tabs anymore as we only have parameters
   
   // Get job execution ID from URL params
   const { jobExecutionId } = useParams<{ jobExecutionId: string }>()
@@ -204,87 +203,44 @@ const JobExecutionDetail = () => {
         </div>
       </Card>
       
-      {/* Parameters and Context Tabs */}
-      <Card>
-        {/* Tab navigation */}
-        <div className="flex border-b border-gray-200 dark:border-gray-700">
-          <button
-            className={`px-4 py-2 text-sm font-medium ${
-              activeTab === 'parameters' 
-                ? 'border-b-2 border-primary-500 text-primary-600 dark:text-primary-400' 
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-            }`}
-            onClick={() => setActiveTab('parameters')}
-          >
-            Parameters
-          </button>
-          <button
-            className={`px-4 py-2 text-sm font-medium ${
-              activeTab === 'context' 
-                ? 'border-b-2 border-primary-500 text-primary-600 dark:text-primary-400' 
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-            }`}
-            onClick={() => setActiveTab('context')}
-          >
-            Context
-          </button>
-        </div>
-        
-        {/* Tab content */}
-        <div className="p-4">
-          {activeTab === 'parameters' && (
-            <div className="table-container">
-              <table className="table">
-                <thead className="table-header">
-                  <tr>
-                    <th className="table-header-cell">Name</th>
-                    <th className="table-header-cell">Type</th>
-                    <th className="table-header-cell">Value</th>
-                    <th className="table-header-cell">Identifying</th>
-                  </tr>
-                </thead>
-                <tbody className="table-body">
-                  {jobExecutionDetail.parameters.map((param, index) => (
-                    <tr key={index} className="table-row">
-                      <td className="table-cell">{param.name}</td>
-                      <td className="table-cell">{param.type}</td>
-                      <td className="table-cell">
-                        <div className="max-w-xs truncate" title={param.value}>
-                          {param.value}
-                        </div>
-                      </td>
-                      <td className="table-cell">
-                        {param.identifying ? 'Yes' : 'No'}
-                      </td>
-                    </tr>
-                  ))}
-                  
-                  {/* No parameters message */}
-                  {jobExecutionDetail.parameters.length === 0 && (
-                    <tr>
-                      <td colSpan={4} className="table-cell text-center py-8 text-gray-500 dark:text-gray-400">
-                        No parameters found.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-          
-          {activeTab === 'context' && (
-            <div>
-              <h3 className="text-lg font-medium mb-2">Short Context</h3>
-              <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded mb-4 overflow-auto">
-                {jobExecutionDetail.context.shortContext || 'No short context available.'}
-              </div>
+      {/* Parameters */}
+      <Card title="Parameters">
+        <div className="table-container">
+          <table className="table">
+            <thead className="table-header">
+              <tr>
+                <th className="table-header-cell">Name</th>
+                <th className="table-header-cell">Type</th>
+                <th className="table-header-cell">Value</th>
+                <th className="table-header-cell">Identifying</th>
+              </tr>
+            </thead>
+            <tbody className="table-body">
+              {jobExecutionDetail.parameters.map((param, index) => (
+                <tr key={index} className="table-row">
+                  <td className="table-cell">{param.name}</td>
+                  <td className="table-cell">{param.type}</td>
+                  <td className="table-cell">
+                    <div className="max-w-xs truncate" title={param.value}>
+                      {param.value}
+                    </div>
+                  </td>
+                  <td className="table-cell">
+                    {param.identifying ? 'Yes' : 'No'}
+                  </td>
+                </tr>
+              ))}
               
-              <h3 className="text-lg font-medium mb-2">Serialized Context</h3>
-              <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-auto">
-                <pre>{jobExecutionDetail.context.serializedContext || 'No serialized context available.'}</pre>
-              </div>
-            </div>
-          )}
+              {/* No parameters message */}
+              {jobExecutionDetail.parameters.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="table-cell text-center py-8 text-gray-500 dark:text-gray-400">
+                    No parameters found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </Card>
       

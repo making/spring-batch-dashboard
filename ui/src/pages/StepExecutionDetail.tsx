@@ -197,20 +197,7 @@ const StepExecutionDetail = () => {
         </div>
       </Card>
       
-      {/* Step Execution Context */}
-      <Card title="Step Execution Context">
-        <div>
-          <h3 className="text-lg font-medium mb-2">Short Context</h3>
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded mb-4 overflow-auto">
-            {stepExecutionDetail.context.shortContext || 'No short context available.'}
-          </div>
-          
-          <h3 className="text-lg font-medium mb-2">Serialized Context</h3>
-          <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-auto">
-            <pre>{stepExecutionDetail.context.serializedContext || 'No serialized context available.'}</pre>
-          </div>
-        </div>
-      </Card>
+      {/* No Step Execution Context section anymore as it's no longer included in the API response */}
       
       <div className="flex gap-4">
         <Link to={`/job-executions/${stepExecutionDetail.jobExecutionId}`} className="btn-outline">
