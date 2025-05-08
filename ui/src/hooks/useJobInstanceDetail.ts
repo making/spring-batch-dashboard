@@ -1,0 +1,18 @@
+import useSWR from 'swr'
+import { apiEndpoints, fetcher } from '../api/batchApi'
+import { JobInstanceDetail } from '../types/batch'
+
+export function useJobInstanceDetail(jobInstanceId: number | null) {
+  const { data, error, isLoading, mutate } = useSWR<JobInstanceDetail>(
+    jobInstanceId ? apiEndpoints.jobInstanceDetail(jobInstanceId) : null,
+    fetcher
+  )
+
+  return {
+    jobInstanceDetail: data,
+    isLoading,
+    isError: !!error,
+    error,
+    mutate
+  }
+}

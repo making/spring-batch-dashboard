@@ -1,0 +1,18 @@
+import useSWR from 'swr'
+import { apiEndpoints, fetcher } from '../api/batchApi'
+import { JobStatistics } from '../types/batch'
+
+export function useJobStatistics() {
+  const { data, error, isLoading, mutate } = useSWR<JobStatistics>(
+    apiEndpoints.jobStatistics(),
+    fetcher
+  )
+
+  return {
+    jobStatistics: data,
+    isLoading,
+    isError: !!error,
+    error,
+    mutate
+  }
+}
