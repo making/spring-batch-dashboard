@@ -481,7 +481,7 @@ export function generateDummyJobExecutionDetail(jobExecutionId: number): JobExec
 export function generateDummyStepExecutionDetail(stepExecutionId: number): StepExecutionDetail {
   const jobExecutionId = Math.floor(stepExecutionId / 100)
   const instanceId = Math.floor(jobExecutionId / 10) + 1
-  const jobName = JOB_NAMES[instanceId % JOB_NAMES.length]
+  // const jobName = JOB_NAMES[instanceId % JOB_NAMES.length]
   
   const stepNames = [
     'extractDataStep',
@@ -709,7 +709,7 @@ window.fetch = async (url: string | URL | Request, options?: RequestInit) => {
     })
   }
   
-  if (urlString.match(/\/statistics\/jobs\/[^\/]+$/)) {
+  if (urlString.match(/\/statistics\/jobs\/[^/]+$/)) {
     // Specific job statistics endpoint
     const jobName = urlString.split('/').pop() || ''
     const response = generateDummyJobSpecificStatistics(jobName)

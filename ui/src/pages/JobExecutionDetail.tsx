@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { LoadingSpinner } from '../components/LoadingSpinner'
@@ -6,7 +6,7 @@ import { ErrorMessage } from '../components/ErrorMessage'
 import { StatusBadge } from '../components/StatusBadge'
 import { DateTime } from '../components/DateTime'
 import { useJobExecutionDetail } from '../hooks/useJobExecutionDetail'
-import { format, parseISO, differenceInSeconds } from 'date-fns'
+import { parseISO, differenceInSeconds } from 'date-fns'
 
 const JobExecutionDetail = () => {
   // State for active tab

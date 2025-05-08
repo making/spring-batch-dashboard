@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 
 // Define theme context type
 type ThemeContextType = {
@@ -7,13 +7,10 @@ type ThemeContextType = {
 }
 
 // Create context with default values
-const ThemeContext = createContext<ThemeContextType>({
+export const ThemeContext = createContext<ThemeContextType>({
   isDarkMode: false,
   toggleTheme: () => { /* Default implementation */ }
 })
-
-// Custom hook to use theme context
-export const useTheme = () => useContext(ThemeContext)
 
 // Theme provider component
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

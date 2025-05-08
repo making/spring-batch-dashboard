@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { StatusBadge } from '../components/StatusBadge'
@@ -13,7 +12,6 @@ import {
   CheckCircle, 
   XCircle, 
   ArrowRight, 
-  Clock, 
   ListOrdered, 
   History 
 } from 'lucide-react'
