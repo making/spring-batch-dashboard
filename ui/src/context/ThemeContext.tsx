@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 // Define theme context type
 type ThemeContextType = {
@@ -11,6 +11,15 @@ export const ThemeContext = createContext<ThemeContextType>({
   isDarkMode: false,
   toggleTheme: () => { /* Default implementation */ }
 })
+
+// Custom hook to use the theme context
+export const useTheme = () => {
+  const context = useContext(ThemeContext)
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider')
+  }
+  return context
+}
 
 // Theme provider component
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
