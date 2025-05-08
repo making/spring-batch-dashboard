@@ -21,7 +21,7 @@ export const DateTime: React.FC<DateTimeProps> = ({
         {format(parsedDate, formatStr)}
       </span>
     )
-  } catch (error) {
+  } catch {
     console.error('Invalid date format:', date)
     return <span className={className}>{date}</span>
   }
