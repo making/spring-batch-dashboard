@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { LoadingSpinner } from '../components/LoadingSpinner'
@@ -172,8 +172,8 @@ const Statistics = () => {
                 </thead>
                 <tbody className="table-body">
                   {Object.entries(jobSpecificStatistics.executionsByStatus)
-                    .filter(([_, count]) => count > 0)
-                    .sort(([_, countA], [__, countB]) => (countB as number) - (countA as number))
+                    .filter(([, count]) => count > 0)
+                    .sort(([, countA], [, countB]) => (countB as number) - (countA as number))
                     .map(([status, count]) => (
                       <tr key={status} className="table-row">
                         <td className="table-cell">

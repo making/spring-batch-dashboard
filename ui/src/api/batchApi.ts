@@ -231,7 +231,7 @@ export function generateDummyJobInstances(params: JobInstancesParams = {}): Page
   
   const items: JobInstance[] = Array.from({ length: Math.min(size, totalItems - page * size) }, (_, index) => {
     const itemIndex = page * size + index
-    const instanceId = totalItems - itemIndex
+    // Removed unused instanceId variable and using it directly where needed
     const selectedJobName = filteredJobNames[itemIndex % filteredJobNames.length]
     
     // Generate latest execution data
@@ -246,6 +246,7 @@ export function generateDummyJobInstances(params: JobInstancesParams = {}): Page
       endTime = endDate.toISOString()
     }
     
+    const instanceId = totalItems - itemIndex
     return {
       jobInstanceId: instanceId,
       jobName: selectedJobName,
@@ -480,7 +481,8 @@ export function generateDummyJobExecutionDetail(jobExecutionId: number): JobExec
 // Generate dummy step execution detail
 export function generateDummyStepExecutionDetail(stepExecutionId: number): StepExecutionDetail {
   const jobExecutionId = Math.floor(stepExecutionId / 100)
-  const instanceId = Math.floor(jobExecutionId / 10) + 1
+  // Remove unused variable instanceId
+  // const instanceId = Math.floor(jobExecutionId / 10) + 1
   // const jobName = JOB_NAMES[instanceId % JOB_NAMES.length]
   
   const stepNames = [

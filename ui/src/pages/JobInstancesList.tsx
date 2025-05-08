@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { LoadingSpinner } from '../components/LoadingSpinner'
@@ -25,8 +25,7 @@ const JobInstancesList = () => {
     jobInstances,
     isLoading,
     isError,
-    error,
-    mutate
+    error
   } = useJobInstances(params)
   
   // Handle page change

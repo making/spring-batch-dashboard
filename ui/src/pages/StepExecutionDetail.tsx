@@ -6,7 +6,7 @@ import { ErrorMessage } from '../components/ErrorMessage'
 import { StatusBadge } from '../components/StatusBadge'
 import { DateTime } from '../components/DateTime'
 import { useStepExecutionDetail } from '../hooks/useStepExecutionDetail'
-import { format, parseISO, differenceInSeconds } from 'date-fns'
+import { parseISO, differenceInSeconds } from 'date-fns'
 
 const StepExecutionDetail = () => {
   // Get step execution ID from URL params

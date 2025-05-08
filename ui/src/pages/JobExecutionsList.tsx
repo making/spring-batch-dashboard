@@ -39,8 +39,7 @@ const JobExecutionsList = () => {
     jobExecutions,
     isLoading,
     isError,
-    error,
-    mutate
+    error
   } = useJobExecutions(params)
   
   // Handle page change
