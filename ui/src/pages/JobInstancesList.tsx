@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Card } from "../components/Card";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import { ErrorMessage } from "../components/ErrorMessage";
@@ -12,12 +12,23 @@ import { useSearchState } from "../context/SearchStateContext";
 
 const JobInstancesList = () => {
   const { searchState, setJobInstancesState } = useSearchState();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   
-  // Initialize params from stored state or default values
-  const [params, setParams] = useState<JobInstancesParams>(searchState.jobInstances);
+  // Initialize params with URL params or saved state
+  const initialParams = { ...searchState.jobInstances };
+  
+  // Check if jobName is in URL params
+  const urlJobName = searchParams.get("jobName");
+  if (urlJobName) {
+    initialParams.jobName = urlJobName;
+  }
+  
+  // Initialize params state
+  const [params, setParams] = useState<JobInstancesParams>(initialParams);
 
-  // State for filter form
-  const [jobNameFilter, setJobNameFilter] = useState(searchState.jobInstances.jobName || "");
+  // State for filter form - initialize with URL param or saved state
+  const [jobNameFilter, setJobNameFilter] = useState(urlJobName || initialParams.jobName || "");
 
   // Fetch job instances with current params
   const { jobInstances, isLoading, isError, error } = useJobInstances(params);
@@ -26,6 +37,20 @@ const JobInstancesList = () => {
   useEffect(() => {
     setJobInstancesState(params);
   }, [params, setJobInstancesState]);
+  
+  // Sync URL with params when they change
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams();
+    
+    if (params.jobName) {
+      newSearchParams.set("jobName", params.jobName);
+    }
+    
+    // Only update if search params have changed
+    if (newSearchParams.toString() !== searchParams.toString()) {
+      setSearchParams(newSearchParams);
+    }
+  }, [params, setSearchParams, searchParams]);
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
@@ -50,6 +75,9 @@ const JobInstancesList = () => {
       size: 20,
       sort: "jobInstanceId,desc",
     });
+    
+    // Clear URL parameters
+    setSearchParams(new URLSearchParams());
   };
 
   // Loading state

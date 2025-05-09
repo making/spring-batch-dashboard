@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { ErrorMessage } from '../components/ErrorMessage'
@@ -23,15 +23,26 @@ const JOB_STATUSES: JobStatus[] = [
 
 const JobExecutionsList = () => {
   const { searchState, setJobExecutionsState } = useSearchState();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   
-  // State for filter and pagination - initialize from saved state
-  const [params, setParams] = useState<JobExecutionsParams>(searchState.jobExecutions)
+  // Initialize params with URL params or saved state
+  const initialParams = { ...searchState.jobExecutions };
   
-  // State for filter form - initialize from saved state
-  const [jobNameFilter, setJobNameFilter] = useState(searchState.jobExecutions.jobName || '')
-  const [statusFilter, setStatusFilter] = useState<JobStatus | ''>(searchState.jobExecutions.status || '')
-  const [startDateFrom, setStartDateFrom] = useState(searchState.jobExecutions.startDateFrom || '')
-  const [startDateTo, setStartDateTo] = useState(searchState.jobExecutions.startDateTo || '')
+  // Check if jobName is in URL params
+  const urlJobName = searchParams.get("jobName");
+  if (urlJobName) {
+    initialParams.jobName = urlJobName;
+  }
+  
+  // State for filter and pagination
+  const [params, setParams] = useState<JobExecutionsParams>(initialParams);
+  
+  // State for filter form - initialize with URL params or saved state
+  const [jobNameFilter, setJobNameFilter] = useState(urlJobName || initialParams.jobName || '');
+  const [statusFilter, setStatusFilter] = useState<JobStatus | ''>(initialParams.status || '');
+  const [startDateFrom, setStartDateFrom] = useState(initialParams.startDateFrom || '');
+  const [startDateTo, setStartDateTo] = useState(initialParams.startDateTo || '');
   
   // Fetch job executions with current params
   const {
@@ -44,7 +55,21 @@ const JobExecutionsList = () => {
   // Update context when params change
   useEffect(() => {
     setJobExecutionsState(params);
-  }, [params, setJobExecutionsState])
+  }, [params, setJobExecutionsState]);
+  
+  // Sync URL with params when they change
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams();
+    
+    if (params.jobName) {
+      newSearchParams.set("jobName", params.jobName);
+    }
+    
+    // Only update if search params have changed
+    if (newSearchParams.toString() !== searchParams.toString()) {
+      setSearchParams(newSearchParams);
+    }
+  }, [params, setSearchParams, searchParams]);
   
   // Handle page change
   const handlePageChange = (newPage: number) => {
@@ -75,6 +100,9 @@ const JobExecutionsList = () => {
       size: 20,
       sort: 'startTime,desc'
     })
+    
+    // Clear URL parameters
+    setSearchParams(new URLSearchParams())
   }
   
   // Loading state
