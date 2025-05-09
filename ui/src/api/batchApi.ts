@@ -2,17 +2,6 @@
 import { 
   JobInstancesParams, 
   JobExecutionsParams, 
-  PageResponse, 
-  JobInstance, 
-  JobInstanceDetail, 
-  JobExecution, 
-  JobExecutionDetail, 
-  StepExecutionDetail, 
-  JobStatistics,
-  JobSpecificStatistics,
-  JobStatus,
-  JobParameter,
-  StepExecutionSummary,
   ApiError
 } from '../types/batch'
 

@@ -6,14 +6,12 @@ import { ErrorMessage } from "../components/ErrorMessage";
 import { StatusBadge } from "../components/StatusBadge";
 import { DateTime } from "../components/DateTime";
 import { useJobInstanceDetail } from "../hooks/useJobInstanceDetail";
-import { useSearchState } from "../context/SearchStateContext";
 
 const JobInstanceDetail = () => {
   // Get job instance ID from URL params
   const { jobInstanceId } = useParams<{ jobInstanceId: string }>();
   const id = jobInstanceId ? parseInt(jobInstanceId) : null;
   const navigate = useNavigate();
-  const { searchState } = useSearchState();
 
   // Fetch job instance detail
   const { jobInstanceDetail, isLoading, isError, error } = useJobInstanceDetail(id);

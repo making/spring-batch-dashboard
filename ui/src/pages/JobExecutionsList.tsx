@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useSearchParams, useNavigate } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { ErrorMessage } from '../components/ErrorMessage'
@@ -24,7 +24,6 @@ const JOB_STATUSES: JobStatus[] = [
 const JobExecutionsList = () => {
   const { searchState, setJobExecutionsState } = useSearchState();
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   
   // Initialize params with URL params or saved state
   const initialParams = { ...searchState.jobExecutions };

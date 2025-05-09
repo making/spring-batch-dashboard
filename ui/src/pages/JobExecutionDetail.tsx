@@ -7,7 +7,6 @@ import { StatusBadge } from '../components/StatusBadge'
 import { DateTime } from '../components/DateTime'
 import { useJobExecutionDetail } from '../hooks/useJobExecutionDetail'
 import { parseISO, differenceInSeconds } from 'date-fns'
-import { useSearchState } from "../context/SearchStateContext"
 
 const JobExecutionDetail = () => {
   // No need for tabs anymore as we only have parameters
@@ -16,7 +15,6 @@ const JobExecutionDetail = () => {
   const { jobExecutionId } = useParams<{ jobExecutionId: string }>()
   const id = jobExecutionId ? parseInt(jobExecutionId) : null
   const navigate = useNavigate()
-  const { searchState } = useSearchState()
   
   // Fetch job execution detail
   const {

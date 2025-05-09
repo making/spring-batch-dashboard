@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Card } from "../components/Card";
 import { LoadingSpinner } from "../components/LoadingSpinner";
 import { ErrorMessage } from "../components/ErrorMessage";
@@ -13,7 +13,6 @@ import { useSearchState } from "../context/SearchStateContext";
 const JobInstancesList = () => {
   const { searchState, setJobInstancesState } = useSearchState();
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   
   // Initialize params with URL params or saved state
   const initialParams = { ...searchState.jobInstances };
