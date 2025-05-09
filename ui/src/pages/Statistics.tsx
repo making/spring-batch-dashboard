@@ -160,7 +160,7 @@ const Statistics = () => {
               <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700">
                 <h3 className="text-xl font-bold">Avg. Duration</h3>
                 <p className="text-3xl font-bold text-primary-600 dark:text-primary-400">
-                  {Math.floor(jobSpecificStatistics.averageDuration / 60)} min {jobSpecificStatistics.averageDuration % 60} sec
+                  {Math.floor(jobSpecificStatistics.averageDuration / 60)} min {Math.floor(jobSpecificStatistics.averageDuration % 60)} sec
                 </p>
               </div>
               
