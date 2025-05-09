@@ -93,6 +93,11 @@ export interface JobSpecificStatistics {
   successRate: number // percentage
 }
 
+export interface RecentJobExecution {
+  jobName: string
+  executions: number
+}
+
 // Pagination types
 export interface PageResponse<T> {
   content: T[]

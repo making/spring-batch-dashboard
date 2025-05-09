@@ -59,7 +59,10 @@ export const apiEndpoints = {
   jobStatistics: () => `/api/statistics/jobs`,
   
   // GET specific job statistics
-  jobSpecificStatistics: (jobName: string) => `/api/statistics/jobs/${jobName}`
+  jobSpecificStatistics: (jobName: string) => `/api/statistics/jobs/${jobName}`,
+  
+  // GET recent job executions statistics 
+  recentExecutions: (days?: number) => `/api/statistics/recent_executions${days ? buildQueryString({ days }) : ''}`
 }
 
 // Mock API response handler - to simulate network delay - no longer used

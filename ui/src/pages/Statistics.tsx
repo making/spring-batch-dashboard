@@ -5,6 +5,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { useJobStatistics } from '../hooks/useJobStatistics'
 import { useJobSpecificStatistics } from '../hooks/useJobSpecificStatistics'
+import { useRecentJobExecutions } from '../hooks/useRecentJobExecutions'
 
 const Statistics = () => {
   // Get job name from URL if available (for specific job stats)
@@ -26,8 +27,16 @@ const Statistics = () => {
     error: specificStatsErrorData
   } = useJobSpecificStatistics(jobName || null)
   
+  // Fetch recent job executions data (last 60 days)
+  const {
+    recentJobExecutions,
+    isLoading: recentExecutionsLoading,
+    isError: recentExecutionsError,
+    error: recentExecutionsErrorData
+  } = useRecentJobExecutions()
+  
   // Loading state
-  const isLoading = globalStatsLoading || (jobName && specificStatsLoading)
+  const isLoading = globalStatsLoading || (jobName && specificStatsLoading) || (!jobName && recentExecutionsLoading)
   if (isLoading) {
     return <LoadingSpinner size="lg" />
   }
@@ -39,6 +48,10 @@ const Statistics = () => {
   
   if (jobName && specificStatsError) {
     return <ErrorMessage error={specificStatsErrorData} />
+  }
+  
+  if (!jobName && recentExecutionsError) {
+    return <ErrorMessage error={recentExecutionsErrorData} />
   }
   
   // No data state
@@ -212,53 +225,43 @@ const Statistics = () => {
       )}
       
       {/* Job list table (only on global stats page) */}
-      {!jobName && jobStatistics && (
+      {!jobName && jobStatistics && recentJobExecutions && (
         <Card title="Jobs">
           <div className="table-container">
             <table className="table">
               <thead className="table-header">
                 <tr>
                   <th className="table-header-cell">Job Name</th>
-                  <th className="table-header-cell">Executions Count</th>
+                  <th className="table-header-cell">Executions Count (60 days)</th>
                   <th className="table-header-cell">Actions</th>
                 </tr>
               </thead>
               <tbody className="table-body">
-                {/* This is just a placeholder - in a real app, we would have a list of jobs */}
-                {Array.from(new Array(Math.min(8, jobStatistics.totalJobs))).map((_, idx) => {
-                  const jobNames = [
-                    'dataImportJob',
-                    'customerProcessingJob',
-                    'transactionReportJob',
-                    'productSyncJob',
-                    'archiveDataJob',
-                    'emailNotificationJob',
-                    'fileExportJob',
-                    'dataValidationJob'
-                  ]
-                  const jobName = jobNames[idx % jobNames.length]
-                  const executions = Math.floor(Math.random() * 100) + 1
-                  
-                  return (
-                    <tr key={idx} className="table-row">
-                      <td className="table-cell">{jobName}</td>
-                      <td className="table-cell">{executions}</td>
+                {recentJobExecutions.length === 0 ? (
+                  <tr className="table-row">
+                    <td colSpan={3} className="table-cell text-center">No job execution data available for the last 60 days</td>
+                  </tr>
+                ) : (
+                  recentJobExecutions.map((job) => (
+                    <tr key={job.jobName} className="table-row">
+                      <td className="table-cell">{job.jobName}</td>
+                      <td className="table-cell">{job.executions}</td>
                       <td className="table-cell">
                         <div className="flex gap-2">
                           <Link 
-                            to={`/statistics/${jobName}`}
+                            to={`/statistics/${job.jobName}`}
                             className="btn btn-outline py-1 px-2 text-xs"
                           >
                             Statistics
                           </Link>
                           <Link 
-                            to={`/job-instances?jobName=${jobName}`}
+                            to={`/job-instances?jobName=${job.jobName}`}
                             className="btn btn-outline py-1 px-2 text-xs"
                           >
                             Instances
                           </Link>
                           <Link 
-                            to={`/job-executions?jobName=${jobName}`}
+                            to={`/job-executions?jobName=${job.jobName}`}
                             className="btn btn-outline py-1 px-2 text-xs"
                           >
                             Executions
@@ -266,8 +269,8 @@ const Statistics = () => {
                         </div>
                       </td>
                     </tr>
-                  )
-                })}
+                  ))
+                )}
               </tbody>
             </table>
           </div>
