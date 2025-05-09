@@ -1,4 +1,4 @@
-import React from "react";
+// JobInstanceDetail component
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Card } from "../components/Card";
 import { LoadingSpinner } from "../components/LoadingSpinner";

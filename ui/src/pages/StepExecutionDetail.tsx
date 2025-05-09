@@ -1,4 +1,4 @@
-import React from 'react'
+// StepExecutionDetail component
 import { useParams, Link } from 'react-router-dom'
 import { Card } from '../components/Card'
 import { LoadingSpinner } from '../components/LoadingSpinner'

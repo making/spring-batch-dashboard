@@ -134,6 +134,7 @@ export interface JobInstancesParams {
   page?: number
   size?: number
   sort?: string
+  [key: string]: string | number | undefined
 }
 
 export interface JobExecutionsParams {
@@ -144,6 +145,7 @@ export interface JobExecutionsParams {
   page?: number
   size?: number
   sort?: string
+  [key: string]: string | number | undefined
 }
 
 // Error response
