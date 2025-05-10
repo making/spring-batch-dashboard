@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logout Confirmation - Spring Batch Dashboard</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Light mode variables */
+      --bg-color: #f9fafb;
+      --card-bg: white;
+      --text-color: #111827;
+      --border-color: #e5e7eb;
+      --input-border: #d1d5db;
+      --input-bg: white;
+      --label-color: #374151;
+      --secondary-text: #6b7280;
+
+      /* Primary color palette */
+      --primary-50: #f7fee7;
+      --primary-100: #ecfccb;
+      --primary-200: #d9f99d;
+      --primary-300: #bef264;
+      --primary-400: #a3e635;
+      --primary-500: #84cc16;
+      --primary-600: #65a30d;
+      --primary-700: #4d7c0f;
+      --primary-800: #3f6212;
+      --primary-900: #365314;
+
+      /* Gray palette */
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+    }
+
+    /* Dark Mode Styles */
+    .dark-mode {
+      --bg-color: #111827; /* dark:bg-gray-900 */
+      --card-bg: #1f2937; /* dark:bg-gray-800 */
+      --text-color: #f9fafb; /* dark:text-white */
+      --border-color: #374151; /* dark:border-gray-700 */
+      --input-border: #4b5563; /* dark:border-gray-600 */
+      --input-bg: #374151; /* dark:bg-gray-700 */
+      --label-color: #e5e7eb; /* dark:text-gray-200 */
+      --secondary-text: #9ca3af; /* dark:text-gray-400 */
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Layout */
+    .container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+    }
+
+    .logout-wrapper {
+      width: 100%;
+      max-width: 36rem;
+    }
+
+    .logout-card {
+      width: 100%;
+      background-color: var(--card-bg);
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Header */
+    .card-header {
+      height: 4rem;
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: border-color 0.3s ease;
+    }
+
+    .app-name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--primary-600);
+    }
+
+    /* Content */
+    .card-body {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .logout-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin-bottom: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    .logout-description {
+      font-size: 0.875rem;
+      color: var(--secondary-text);
+      margin-bottom: 2rem;
+      transition: color 0.3s ease;
+    }
+
+    .confirm-icon {
+      width: 4rem;
+      height: 4rem;
+      margin: 0 auto 1.5rem;
+      background-color: var(--primary-100);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .dark-mode .confirm-icon {
+      background-color: var(--primary-900);
+    }
+
+    .confirm-icon svg {
+      width: 2.5rem;
+      height: 2.5rem;
+      color: var(--primary-600);
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .logout-button {
+      display: inline-block;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      background-color: var(--primary-600);
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-align: center;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease-in-out;
+    }
+
+    .logout-button:hover {
+      background-color: var(--primary-700);
+    }
+
+    .logout-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.3);
+    }
+
+    .secondary-button {
+      display: inline-block;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      background-color: transparent;
+      color: var(--primary-600);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-align: center;
+      border: 1px solid var(--primary-600);
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+      text-decoration: none;
+    }
+
+    .secondary-button:hover {
+      background-color: var(--primary-50);
+    }
+
+    .dark-mode .secondary-button:hover {
+      background-color: var(--primary-900);
+      color: var(--primary-200);
+    }
+
+    .secondary-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.3);
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 0.875rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .dark-mode .theme-toggle:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+    <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+         stroke-linejoin="round" style="display: none;">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </button>
+  <div class="logout-wrapper">
+    <div class="logout-card">
+      <!-- Header -->
+      <div class="card-header">
+        <span class="app-name">Spring Batch Dashboard</span>
+      </div>
+
+      <!-- Logout Content -->
+      <div class="card-body">
+        <div class="confirm-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+        </div>
+
+        <h2 class="logout-title">Confirm Logout</h2>
+
+        <p class="logout-description">
+          Are you sure you want to log out of the Spring Batch Dashboard?
+        </p>
+
+        <div class="button-group">
+          <form action="/logout" method="POST">
+            {{#_csrf}}
+              <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+            {{/_csrf}}
+            <button type="submit" class="logout-button">
+              Logout
+            </button>
+          </form>
+
+          <a href="/" class="secondary-button">
+            Cancel
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Dark mode toggle functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.getElementById('theme-toggle');
+    const moonIcon = document.getElementById('moon-icon');
+    const sunIcon = document.getElementById('sun-icon');
+
+    // Check for saved theme preference or preferred color scheme
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia
+        && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Apply theme based on saved preference or system preference
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.body.classList.add('dark-mode');
+      moonIcon.style.display = 'none';
+      sunIcon.style.display = 'block';
+    }
+
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDarkMode = document.body.classList.contains('dark-mode');
+
+      // Update icons
+      moonIcon.style.display = isDarkMode ? 'none' : 'block';
+      sunIcon.style.display = isDarkMode ? 'block' : 'none';
+
+      // Save preference
+      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    });
+  });
+</script>
+</body>
+</html>
