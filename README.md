@@ -48,6 +48,19 @@ Go to `http://localhost:8080` in your browser to access the dashboard.
 
 Replace the environment variables with your actual database connection details and dashboard credentials.
 
+You can also use a pre-built Docker image:
+
+```bash
+docker run --rm --name spring-batch-dashboard -p 8080:8080 ghcr.io/making/spring-batch-dashboard:native \
+  --spring.datasource.url=jdbc:postgresql://${METADATA_DB_HOST}:${METADATA_DB_PORT}/${METADATA_DB_NAME} \
+  --spring.datasource.username=${METADATA_DB_USERNAME} \
+  --spring.datasource.password=${METADATA_DB_PASSWORD} \
+  --spring.security.user.name=${DASHBOARD_USERNAME} \
+  --spring.security.user.password=${DASHBOARD_PASSWORD}
+```
+
+`ghcr.io/making/spring-batch-dashboard:native` is a native image built with GraalVM, so it should start up faster. If you have issues starting it, use `ghcr.io/making/spring-batch-dashboard:jvm` instead, and report the issue.
+
 ## Current Limitations
 
 - PostgreSQL support only
