@@ -61,7 +61,7 @@ docker run --rm --name spring-batch-dashboard -p 8080:8080 ghcr.io/making/spring
 
 `ghcr.io/making/spring-batch-dashboard:native` is a native image built with GraalVM, so it should start up faster. If you have issues starting it, use `ghcr.io/making/spring-batch-dashboard:jvm` instead, and report the issue.
 
-> ![TIP]
+> [!TIP]
 > If you want to set up a dedicated database for your metadata tables, see this article (https://ik.am/entries/845/en) for a quick guide on how to set it up.
 
 ## Current Limitations
