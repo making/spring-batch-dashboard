@@ -206,7 +206,7 @@ public class JobStatisticsMapper {
 				""".formatted(days)).query(JobExecutionStats.class).list();
 	}
 
-	private record StatusCount(JobStatus status, Long count) {
+	public record StatusCount(JobStatus status, Long count) {
 	}
 
 }
