@@ -12,8 +12,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <SWRConfig 
         value={{
           fetcher: (resource, init) => fetch(resource, init).then(res => res.json()),
-          revalidateOnFocus: false,
-          revalidateIfStale: false
+          revalidateOnFocus: true,  // Enable revalidation when window regains focus
+          revalidateIfStale: true,  // Revalidate if data is stale
+          focusThrottleInterval: 1000  // Throttle focus revalidation to 1 second
         }}
       >
         <ThemeProvider>
