@@ -1,2 +1,2 @@
-image: ghcr.io/making/spring-batch-dashboard@sha256:ab7c05a5c0a39a13749facaf6468ed9e6d64f196a33447cd615f75649e0d5d4a
-git_revision: 45b54da68007acbb09b50aff940711231417d492
+image: ghcr.io/making/spring-batch-dashboard@sha256:99e11ec1a1befebadcc5336f2d8ea387e19ae920e32dc4dd4edb6e3b4da3a865
+git_revision: 2e89de649541740d90a63461074c5d5c757972a1
