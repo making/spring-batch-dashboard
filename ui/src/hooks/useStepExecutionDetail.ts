@@ -1,11 +1,10 @@
 import useSWR from 'swr'
-import { apiEndpoints, fetcher } from '../api/batchApi'
+import { apiEndpoints } from '../api/batchApi'
 import { StepExecutionDetail } from '../types/batch'
 
 export function useStepExecutionDetail(stepExecutionId: number | null) {
   const { data, error, isLoading, mutate } = useSWR<StepExecutionDetail>(
-    stepExecutionId ? apiEndpoints.stepExecutionDetail(stepExecutionId) : null,
-    fetcher
+    stepExecutionId ? apiEndpoints.stepExecutionDetail(stepExecutionId) : null
   )
 
   return {

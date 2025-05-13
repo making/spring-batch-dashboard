@@ -37,7 +37,7 @@ public class SecurityConfig {
 					.defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint("/login"),
 							antMatcher("/**"));
 			})
-			.formLogin(form -> form.loginPage("/login"))
+			.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/", true))
 			.rememberMe(Customizer.withDefaults())
 			.logout(logout -> logout.logoutUrl("/logout"));
 		return http.build();

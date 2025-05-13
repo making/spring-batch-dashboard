@@ -1,20 +1,13 @@
 // API fetcher utility function
 import { 
   JobInstancesParams, 
-  JobExecutionsParams, 
-  ApiError
+  JobExecutionsParams 
 } from '../types/batch'
+import httpClient from './httpClient'
 
-// Global fetcher with error handling
-export const fetcher = async (url: string) => {
-  const response = await fetch(url)
-  
-  if (!response.ok) {
-    const error: ApiError = await response.json()
-    throw error
-  }
-  
-  return response.json()
+// Global fetcher with error handling using httpClient
+export const fetcher = async <T>(url: string): Promise<T> => {
+  return httpClient.get<T>(url);
 }
 
 // Construct query string from params

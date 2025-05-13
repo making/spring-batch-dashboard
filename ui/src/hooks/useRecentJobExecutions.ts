@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { apiEndpoints, fetcher } from '../api/batchApi'
+import { apiEndpoints } from '../api/batchApi'
 import { RecentJobExecution } from '../types/batch'
 
 /**
@@ -10,8 +10,7 @@ import { RecentJobExecution } from '../types/batch'
  */
 export function useRecentJobExecutions(days?: number) {
   const { data, error, isLoading, mutate } = useSWR<RecentJobExecution[]>(
-    apiEndpoints.recentExecutions(days),
-    fetcher
+    apiEndpoints.recentExecutions(days)
   )
 
   return {
