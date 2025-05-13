@@ -30,7 +30,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({ error, className = '
       {/* Show login button for authentication errors */}
       {isAuthError && (
         <a 
-          href="http://localhost:8080/login" 
+          href="/login"
           className="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-danger-600 hover:bg-danger-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-danger-500"
         >
           Go to Login
