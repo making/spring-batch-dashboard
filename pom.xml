@@ -254,7 +254,7 @@
             </goals>
             <configuration>
               <sources>
-                <source>${basedir}/target/generated-sources</source>
+                <source>${basedir}/target/generated-sources/annotations</source>
               </sources>
             </configuration>
           </execution>
