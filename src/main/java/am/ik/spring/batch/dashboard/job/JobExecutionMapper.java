@@ -154,6 +154,8 @@ public class JobExecutionMapper {
 					    BATCH_JOB_EXECUTION_PARAMS jp
 					WHERE
 					    jp.JOB_EXECUTION_ID = :jobExecutionId
+					ORDER BY
+					    jp.PARAMETER_NAME ASC
 					""").param("jobExecutionId", jobExecutionId).query(JobParameter.class).list();
 			List<StepExecutionSummary> stepExecutions = this.jdbcClient.sql("""
 					SELECT
@@ -169,6 +171,8 @@ public class JobExecutionMapper {
 					    BATCH_STEP_EXECUTION se
 					WHERE
 					    se.JOB_EXECUTION_ID = :jobExecutionId
+					ORDER BY
+					    se.START_TIME DESC
 					""").param("jobExecutionId", jobExecutionId).query(StepExecutionSummary.class).list();
 			return JobExecutionDetailBuilder.from(je).parameters(jobParameters).steps(stepExecutions).build();
 		});

@@ -48,6 +48,8 @@ public class StepExecutionMapper {
 				    ON  je.JOB_INSTANCE_ID = ji.JOB_INSTANCE_ID
 				WHERE
 				    se.STEP_EXECUTION_ID = :stepExecutionId
+				ORDER BY
+				    se.END_TIME DESC
 				""").param("stepExecutionId", stepExecutionId).query(StepExecutionDetail.class).optional();
 	}
 
