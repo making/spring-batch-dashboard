@@ -31,6 +31,7 @@ export interface JobExecution {
   exitMessage?: string
   lastUpdated: string
   parameters: JobParameter[]
+  executionContext: ExecutionContextItem[]
 }
 
 export interface JobExecutionDetail extends JobExecution {
@@ -42,6 +43,12 @@ export interface JobParameter {
   type: string
   value: string
   identifying: boolean
+}
+
+export interface ExecutionContextItem {
+  name: string
+  type: string
+  value: string
 }
 
 // Step Execution types
@@ -68,6 +75,7 @@ export interface StepExecutionDetail extends StepExecutionSummary {
   exitCode: string
   exitMessage?: string
   lastUpdated: string
+  executionContext: ExecutionContextItem[]
 }
 
 // Statistics types
