@@ -244,7 +244,44 @@ const JobExecutionDetail = () => {
           </table>
         </div>
       </Card>
-      
+
+      {/* Execution Context */}
+      <Card title="Execution Context">
+        <div className="table-container">
+          <table className="table">
+            <thead className="table-header">
+            <tr>
+              <th className="table-header-cell">Name</th>
+              <th className="table-header-cell">Type</th>
+              <th className="table-header-cell">Value</th>
+            </tr>
+            </thead>
+            <tbody className="table-body">
+            {jobExecutionDetail.executionContext.map((ctx, index) => (
+                <tr key={index} className="table-row">
+                  <td className="table-cell">{ctx.name}</td>
+                  <td className="table-cell">{ctx.type}</td>
+                  <td className="table-cell">
+                    <pre>
+                      {ctx.value}
+                    </pre>
+                  </td>
+                </tr>
+            ))}
+
+            {/* No execution context message */}
+            {jobExecutionDetail.executionContext.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="table-cell text-center py-8 text-gray-500 dark:text-gray-400">
+                    No execution context found.
+                  </td>
+                </tr>
+            )}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
       <div className="flex gap-4">
         <button 
           onClick={() => navigate('/job-executions')} 

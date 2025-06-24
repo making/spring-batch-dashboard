@@ -4,5 +4,5 @@ import org.jilt.Builder;
 import org.jilt.BuilderStyle;
 
 @Builder(style = BuilderStyle.STAGED_PRESERVING_ORDER)
-public record StepExecutionContext(String shortContext, String serializedContext) {
+public record ExecutionContext(String shortContext, String serializedContext) {
 }

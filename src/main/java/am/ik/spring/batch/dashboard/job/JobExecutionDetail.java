@@ -10,5 +10,5 @@ import org.springframework.lang.Nullable;
 public record JobExecutionDetail(long jobExecutionId, long jobInstanceId, String jobName, LocalDateTime createTime,
 		LocalDateTime startTime, @Nullable LocalDateTime endTime, JobStatus status, String exitCode,
 		@Nullable String exitMessage, LocalDateTime lastUpdated, List<JobParameter> parameters,
-		List<StepExecutionSummary> steps) {
+		List<StepExecutionSummary> steps, @Nullable List<ExecutionContextItem> executionContext) {
 }

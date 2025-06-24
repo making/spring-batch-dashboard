@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import am.ik.spring.batch.dashboard.utils.ExecutionContextDeserializer;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
@@ -13,8 +15,11 @@ public class JobExecutionMapper {
 
 	private final JdbcClient jdbcClient;
 
-	public JobExecutionMapper(JdbcClient jdbcClient) {
+	private final ExecutionContextDeserializer executionContextDeserializer;
+
+	public JobExecutionMapper(JdbcClient jdbcClient, ExecutionContextDeserializer executionContextDeserializer) {
 		this.jdbcClient = jdbcClient;
+		this.executionContextDeserializer = executionContextDeserializer;
 	}
 
 	public PageResponse<JobExecution> findJobExecutions(JobExecutionsParams params) {
@@ -174,7 +179,20 @@ public class JobExecutionMapper {
 					ORDER BY
 					    se.START_TIME DESC
 					""").param("jobExecutionId", jobExecutionId).query(StepExecutionSummary.class).list();
-			return JobExecutionDetailBuilder.from(je).parameters(jobParameters).steps(stepExecutions).build();
+			ExecutionContext executionContext = this.jdbcClient.sql("""
+					SELECT
+					    ec.SHORT_CONTEXT,
+					    ec.SERIALIZED_CONTEXT
+					FROM
+					    BATCH_JOB_EXECUTION_CONTEXT ec
+					WHERE
+					    ec.JOB_EXECUTION_ID = :jobExecutionId
+					""").param("jobExecutionId", jobExecutionId).query(ExecutionContext.class).single();
+			return JobExecutionDetailBuilder.from(je)
+				.parameters(jobParameters)
+				.steps(stepExecutions)
+				.executionContext(executionContextDeserializer.deserialize(executionContext))
+				.build();
 		});
 	}
 

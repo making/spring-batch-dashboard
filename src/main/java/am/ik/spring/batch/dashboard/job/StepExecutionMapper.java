@@ -1,6 +1,9 @@
 package am.ik.spring.batch.dashboard.job;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+
+import am.ik.spring.batch.dashboard.utils.ExecutionContextDeserializer;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
@@ -9,12 +12,15 @@ public class StepExecutionMapper {
 
 	private final JdbcClient jdbcClient;
 
-	public StepExecutionMapper(JdbcClient jdbcClient) {
+	private final ExecutionContextDeserializer executionContextDeserializer;
+
+	public StepExecutionMapper(JdbcClient jdbcClient, ExecutionContextDeserializer executionContextDeserializer) {
 		this.jdbcClient = jdbcClient;
+		this.executionContextDeserializer = executionContextDeserializer;
 	}
 
 	public Optional<StepExecutionDetail> getStepExecutionDetail(long stepExecutionId) {
-		return this.jdbcClient.sql("""
+		Optional<StepExecutionDetail> stepExecution = this.jdbcClient.sql("""
 				SELECT
 				    se.STEP_EXECUTION_ID,
 				    se.JOB_EXECUTION_ID,
@@ -50,7 +56,45 @@ public class StepExecutionMapper {
 				    se.STEP_EXECUTION_ID = :stepExecutionId
 				ORDER BY
 				    se.END_TIME DESC
-				""").param("stepExecutionId", stepExecutionId).query(StepExecutionDetail.class).optional();
+				""")
+			.param("stepExecutionId", stepExecutionId)
+			.query((rs, rowNum) -> StepExecutionDetailBuilder.stepExecutionDetail()
+				.stepExecutionId(rs.getLong("STEP_EXECUTION_ID"))
+				.stepName(rs.getString("STEP_NAME"))
+				.status(StepStatus.valueOf(rs.getString("STATUS")))
+				.readCount(rs.getLong("READ_COUNT"))
+				.writeCount(rs.getLong("WRITE_COUNT"))
+				.filterCount(rs.getLong("FILTER_COUNT"))
+				.startTime(rs.getObject("START_TIME", LocalDateTime.class))
+				.endTime(rs.getObject("END_TIME", LocalDateTime.class))
+				.jobExecutionId(rs.getLong("JOB_EXECUTION_ID"))
+				.version(rs.getInt("VERSION"))
+				.createTime(rs.getObject("CREATE_TIME", LocalDateTime.class))
+				.commitCount(rs.getLong("COMMIT_COUNT"))
+				.readSkipCount(rs.getLong("READ_SKIP_COUNT"))
+				.writeSkipCount(rs.getLong("WRITE_SKIP_COUNT"))
+				.processSkipCount(rs.getLong("PROCESS_SKIP_COUNT"))
+				.rollbackCount(rs.getLong("ROLLBACK_COUNT"))
+				.exitCode(rs.getString("EXIT_CODE"))
+				.exitMessage(rs.getString("EXIT_MESSAGE"))
+				.lastUpdated(rs.getObject("LAST_UPDATED", LocalDateTime.class))
+				.build())
+			.optional();
+
+		return stepExecution.map(se -> {
+			ExecutionContext executionContext = this.jdbcClient.sql("""
+					SELECT
+					    ec.SHORT_CONTEXT,
+					    ec.SERIALIZED_CONTEXT
+					FROM
+					    BATCH_STEP_EXECUTION_CONTEXT ec
+					WHERE
+					    ec.STEP_EXECUTION_ID = :stepExecutionId
+					""").param("stepExecutionId", stepExecutionId).query(ExecutionContext.class).single();
+			return StepExecutionDetailBuilder.from(se)
+				.executionContext(executionContextDeserializer.deserialize(executionContext))
+				.build();
+		});
 	}
 
 }
